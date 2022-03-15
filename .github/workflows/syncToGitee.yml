@@ -1,0 +1,27 @@
+name: syncToGitee
+on:
+  push:
+    branches: 
+    - main
+    - pages
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror the Github organization repos to Gitee.
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/wyx-lsy
+          dst: gitee/w-yuxuan
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          static_list: "wyx_blog"
+          force_update: true
+          debug: true
+      - name: Build Gitee Pages
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          gitee-username: w-yuxuan
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          gitee-repo: w-yuxuan/wyx_blog
+          branch: pages
